@@ -16,23 +16,21 @@ RSpec.describe "cart index page" do
       visit "/items/#{@pencil.id}"
       click_on "Add To Cart"
 
-      @items_in_cart = [@paper,@tire,@pencil]
+      @items = {@tire => 1, @paper => 1, @pencil => 1}
     end
 
     it "they can increment the count of items to purchase as long as there is enough inventory" do
       visit "/cart"
 
       within("#cart-item-#{@tire.id}") do
-        expect(page).to have_content("0")
-        click_on "Add"
         expect(page).to have_content("1")
         click_on "Add"
         expect(page).to have_content("2")
+        click_on "Add"
+        expect(page).to have_content("3")
       end
 
       within("#cart-item-#{@paper.id}") do
-        expect(page).to have_content("0")
-        click_on "Add"
         expect(page).to have_content("1")
         click_on "Add"
         expect(page).to have_content("2")

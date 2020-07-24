@@ -50,14 +50,14 @@ class ItemsController < ApplicationController
   end
 
   def quantity
-    binding.pry
     item = Item.find(params[:item_id])
-    if cart.contents.include?(params[:item_id])
-      cart.contents[params[:item_id]] += 1
+    if cart.items.keys.include?(item)
+      cart.items[item] += 1
       if item.inventory > 0
         item.inventory -= 1
       end
     end
+    redirect_to "/cart"
   end
 
   private

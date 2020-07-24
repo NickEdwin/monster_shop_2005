@@ -47,5 +47,9 @@ RSpec.describe Cart do
       expect(@cart.subtotal(@ogre)).to eq(20)
       expect(@cart.subtotal(@giant)).to eq(100)
     end
+
+    it '#add' do
+      @cart.add_quantity
+    end
   end
 end

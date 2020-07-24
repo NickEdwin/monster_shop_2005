@@ -32,4 +32,13 @@ class Cart
     end
   end
 
+  def add_quantity
+    item = Item.find(params[:item_id])
+    if cart.items.keys.include?(item)
+      cart.items[item] += 1
+      if item.inventory > 0
+        item.inventory -= 1
+      end
+    end
+  end
 end
