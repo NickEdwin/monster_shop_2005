@@ -5,7 +5,7 @@ class Merchant::ItemsController < Merchant::BaseController
     @items = @merchant.items
   end
 
-  def update
+  def activate
     item = Item.find(params[:id])
     if item.active?
       item.update(active?: false)
@@ -18,6 +18,21 @@ class Merchant::ItemsController < Merchant::BaseController
     end
   end
 
+  def edit
+    @item = Item.find(params[:id])
+  end
+  
+  def update
+    item = Item.find(params[:id])
+    item.update(item_params)
+    if item.save
+      redirect_to "/merchant/items"
+    else
+      flash[:error] = item.errors.full_messages.to_sentence
+      redirect_to "merchant/items/#{item.id}/edit"
+    end
+  end
+  
   def delete
     item = Item.find(params[:id])
     item.delete

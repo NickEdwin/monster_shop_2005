@@ -38,7 +38,7 @@ class ItemsController < ApplicationController
       redirect_to "/items/#{@item.id}"
     else
       flash[:error] = @item.errors.full_messages.to_sentence
-      render :edit
+      redirect_to "/items/#{@item.id}/edit"
     end
   end
 

@@ -127,7 +127,7 @@ RSpec.describe "As a merchant user" do
       fill_in :description, with: ""
       fill_in :price, with: 0
       fill_in :inventory, with: ""
-      #fill_in :inventory, with: ("-4") (-4) or save to other var 
+      #fill_in :inventory, with: ("-4") (-4) or save to other var
 
       click_on "Create Item"
 

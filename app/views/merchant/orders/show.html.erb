@@ -1,1 +1,13 @@
 <h1>Order Show page</h1>
+<p> Customer Name: <%= @order.name %> </p>
+<p> Customer Address: <%= @order.address %> </p>
+<p> Order Contents: </p>
+
+<% @order.items.each do |item| %>
+  <section class = "order-item-<%= item.id %>">
+  <img src= <%= item.image %> >
+  <h3> <%= link_to item.name, "/items/#{item.id}" %></h3>
+  <p> Item Quantity: <%= ItemOrder.where('item_orders.item_id = ?', item.id).first.quantity %> </p>
+  <p> Item Price: <%= item.price %> </p>
+  </section>
+<% end %>

@@ -9,6 +9,18 @@ Rails.application.routes.draw do
   patch "/merchants/:id", to: "merchants#update"
   delete "/merchants/:id", to: "merchants#destroy"
 
+  namespace :merchant do
+    get "/", to: "dashboard#index"
+    get "/orders/:order_id", to: "orders#show"
+    get "/items", to: "items#index"
+    patch "/items/:id/activate", to: "items#activate"
+    delete "/items/:id/delete", to: "items#delete"
+    get "/items/new", to: "items#new"
+    post "/items", to: "items#create"
+    get "/items/:id/edit", to: "items#edit"
+    patch "/items/:id", to: "items#update"
+  end
+
   get "/items", to: "items#index"
   get "/items/:id", to: "items#show"
   get "/items/:id/edit", to: "items#edit"
@@ -53,15 +65,7 @@ Rails.application.routes.draw do
   put "/cart/:item_id/increase", to: "cart#increase"
   put "/cart/:item_id/decrease", to: "cart#decrease"
 
-  namespace :merchant do
-    get "/", to: "dashboard#index"
-    get "/orders/:order_id", to: "orders#show"
-    get "/items", to: "items#index"
-    patch "/items/:id/update", to: "items#update"
-    delete "/items/:id/delete", to: "items#delete"
-    get "/items/new", to: "items#new"
-    post "/items", to: "items#create"
-  end
+
 
   namespace :admin do
     get "/", to: "dashboard#index"
