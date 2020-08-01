@@ -11,6 +11,7 @@ class CartController < ApplicationController
 
   def show
     @items = cart.items
+    @coupons = Coupon.all
   end
 
   def empty

@@ -32,4 +32,8 @@ class Cart
     end
   end
 
+  def discount(item)
+    discount = Coupon.where(item_id: item.id).maximum(:discount)
+    item.price - (item.price * (discount / 100))
+  end
 end

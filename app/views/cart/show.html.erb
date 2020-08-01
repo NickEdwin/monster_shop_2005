@@ -1,4 +1,12 @@
 <h1>Cart</h1>
+<center>
+  <% if Coupon.any? %>
+    <p>The Following Items have Eligable Coupons:</p>
+    <% @coupons.each do |coupon|%>
+      <p><%= Item.find(coupon.item_id).name %>: <%= coupon.name %> - Sold by: <%= Merchant.find(coupon.merchant_id).name %> </p>
+    <% end %>
+  <% end %>
+</center>
 
 <% if !@items.empty? %>
 <center>
@@ -37,7 +45,17 @@
         </center>
         </td>
       <td>
-        <p><%=number_to_currency(cart.subtotal(item))%></p>
+        <% if Coupon.any? %>
+          <% @coupons.find do |coupon| %>
+            <% if (quantity >= coupon.min_items) && (coupon.item_id == item.id) %>
+              <p><%= number_to_currency(quantity * cart.discount(item)) %></p>
+              <p>Discount applied!</p>
+              <p>*Price adjusted at checkout*</p>
+            <% end %>
+          <% end %>
+        <% else %>
+          <p><%= number_to_currency(cart.subtotal(item)) %></p>
+        <% end %>
       </td>
     </tr>
   <% end %>
