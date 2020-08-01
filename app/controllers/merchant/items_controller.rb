@@ -21,7 +21,7 @@ class Merchant::ItemsController < Merchant::BaseController
   def delete
     item = Item.find(params[:id])
     item.delete
-    flash[:sucess] = "#{item.name} was sucessfully deleted"
+    flash[:sucess] = "#{item.name} was successfully deleted"
     redirect_to "/merchant/items"
   end
 
