@@ -12,6 +12,8 @@ RSpec.describe Cart do
         @ogre.id.to_s => 1,
         @giant.id.to_s => 2
         })
+
+      @coupon_1 = Coupon.create!(name: "Buy 20 save 10%", min_items: 1, discount: 50, merchant_id: @brian.id, item_id: @hippo.id)
     end
 
     it '.contents' do
@@ -50,6 +52,10 @@ RSpec.describe Cart do
     it '.subtotal()' do
       expect(@cart.subtotal(@ogre)).to eq(20)
       expect(@cart.subtotal(@giant)).to eq(100)
+    end
+
+    it '.discount()' do
+      expect(@cart.discount(@hippo)).to eq(25)
     end
   end
 end
