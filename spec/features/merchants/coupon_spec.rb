@@ -66,4 +66,22 @@ RSpec.describe "As a merchant user" do
     expect(page).to have_content("Name can't be blank")
     end
   end
+
+  describe "After a coupon is created" do
+    it "Is displayed on my items page" do
+      coupon_1 = Coupon.create(name: "Buy 20 save 10%", min_items: 20, discount: 10, merchant_id: @bike_shop.id, item_id: @tire.id)
+
+      visit("/merchant/items")
+
+      expect(page).to have_content("Current Offers")
+      expect(page).to have_content("Coupon Name")
+      expect(page).to have_content("#{coupon_1.name}")
+      expect(page).to have_content("Minimum Purchase:")
+      expect(page).to have_content("#{coupon_1.min_items}")
+      expect(page).to have_content("Discount:")
+      expect(page).to have_content("#{coupon_1.discount}")
+      expect(page).to have_content("Item:")
+      expect(page).to have_content("#{@tire.name}")
+    end
+  end
 end
