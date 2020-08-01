@@ -64,6 +64,7 @@ Rails.application.routes.draw do
     patch "/orders/:order_id/items/:item_id/update", to: "order_items#update"
     get "/items/:item_id/coupons/new", to: "coupons#new"
     post "/items/:item_id/coupons/new", to: "coupons#create"
+    delete "/coupons/:coupon_id/delete", to: "coupons#destroy"
   end
 
   namespace :admin do
