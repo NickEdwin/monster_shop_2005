@@ -11,6 +11,8 @@ RSpec.describe "As a merchant user" do
 
     @user = User.create(name: "Nick", address: "123 North st", city: "Denver", state: "Colorado", zip: "80401", email: "12345@gmail.com", password: "password", role: 2, merchant_id: @bike_shop.id)
 
+    @coupon_1 = Coupon.create(name: "Buy 20 save 10%", min_items: 20, discount: 10, merchant_id: @bike_shop.id, item_id: @tire.id)
+
     allow_any_instance_of(ApplicationController).to receive(:current_user).and_return(@user)
   end
 
@@ -69,19 +71,31 @@ RSpec.describe "As a merchant user" do
 
   describe "After a coupon is created" do
     it "Is displayed on my items page" do
-      coupon_1 = Coupon.create(name: "Buy 20 save 10%", min_items: 20, discount: 10, merchant_id: @bike_shop.id, item_id: @tire.id)
 
       visit("/merchant/items")
 
       expect(page).to have_content("Current Offers")
       expect(page).to have_content("Coupon Name")
-      expect(page).to have_content("#{coupon_1.name}")
+      expect(page).to have_content("#{@coupon_1.name}")
       expect(page).to have_content("Minimum Purchase:")
-      expect(page).to have_content("#{coupon_1.min_items}")
+      expect(page).to have_content("#{@coupon_1.min_items}")
       expect(page).to have_content("Discount:")
-      expect(page).to have_content("#{coupon_1.discount}")
+      expect(page).to have_content("#{@coupon_1.discount}")
       expect(page).to have_content("Item:")
       expect(page).to have_content("#{@tire.name}")
+    end
+
+    it "Can delete a coupon" do
+
+      visit("/merchant/items")
+
+      expect(page).to have_content("Delete | Edit")
+
+      click_on("Delete")
+
+      expect(page).to have_content("#{@coupon_1.name} was sucessfully deleted")
+
+      expect(Coupon.any?).to eq(false)
     end
   end
 end
