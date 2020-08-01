@@ -14,6 +14,22 @@ class Merchant::CouponsController < Merchant::BaseController
     end
   end
 
+  def edit
+    @coupon = Coupon.find(params[:coupon_id])
+  end
+
+  def update
+    coupon = Coupon.find(params[:coupon_id])
+    coupon.update(coupon_params)
+    if coupon.save
+      redirect_to "/merchant/items"
+      flash[:success] = "#{coupon.name} was successfully updated"
+    else
+      flash[:error] = coupon.errors.full_messages.to_sentence
+      redirect_back(fallback_location: root_path)
+    end
+  end
+
   def destroy
     coupon = Coupon.find(params[:coupon_id])
     coupon.delete
