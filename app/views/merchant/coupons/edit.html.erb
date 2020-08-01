@@ -1,0 +1,17 @@
+<center>
+  <h3>Edit <%= @coupon.name %> </h3>
+
+  <%= form_tag "/merchant/coupons/#{@coupon.id}/update" do %>
+    <%= label_tag :coupon_name %>
+    <%= text_field_tag :name%>
+
+    <%= label_tag :minmum_amount_of_items %>
+    <%= number_field_tag :min_items, nil, min: 1 %><br>
+
+    <%= label_tag :discount_percentage %>
+    <%= number_field_tag :discount, nil, min: 1 %>
+
+    <%= hidden_field_tag :merchant_id, @coupon.merchant_id %>
+    <%= submit_tag 'Update Coupon' %>
+  <% end %>
+</center>
