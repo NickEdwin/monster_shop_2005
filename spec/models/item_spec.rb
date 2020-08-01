@@ -15,6 +15,7 @@ describe Item, type: :model do
     it {should belong_to :merchant}
     it {should have_many :reviews}
     it {should have_many :item_orders}
+    it {should have_many :coupons}
     it {should have_many(:orders).through(:item_orders)}
   end
 

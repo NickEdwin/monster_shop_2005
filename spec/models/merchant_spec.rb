@@ -11,6 +11,7 @@ describe Merchant, type: :model do
 
   describe "relationships" do
     it {should have_many :items}
+    it {should have_many :coupons}
   end
 
   describe 'instance methods' do
@@ -21,10 +22,10 @@ describe Merchant, type: :model do
     end
     it 'no_orders' do
       expect(@meg.no_orders?).to eq(true)
-      
+
       order_1 = Order.create!(name: 'Meg', address: '123 Stang Ave', city: 'Hershey', state: 'PA', zip: 17033, user_id: @user.id)
       item_order_1 = order_1.item_orders.create!(item: @tire, price: @tire.price, quantity: 2)
-      
+
       expect(@meg.no_orders?).to eq(false)
     end
 
