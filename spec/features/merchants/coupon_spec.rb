@@ -1,0 +1,35 @@
+require 'rails_helper'
+
+RSpec.describe "As a merchant user" do
+  before :each do
+    @bike_shop = Merchant.create(name: "Brian's Bike Shop", address: '123 Bike Rd.', city: 'Richmond', state: 'VA', zip: 80203)
+    @dog_shop = Merchant.create(name: "Meg's Dog Shop", address: '123 Dog Rd.', city: 'Hershey', state: 'PA', zip: 80203)
+
+    @chain = @bike_shop.items.create(name: "Chain", description: "It'll never break! (no refunds for breakage)", price: 50, image: "https://www.rei.com/media/b61d1379-ec0e-4760-9247-57ef971af0ad?size=784x588", inventory: 100)
+    @tire = @bike_shop.items.create(name: "Tire", description: "You're gonna need two!", price: 100, image: "https://www.vittoria.com/us/pub/media/catalog/product/cache/c687aa7517cf01e65c009f6943c2b1e9/2/5/25bfb7bd-8a1a-431b-8a50-a5246df33dd2.png", inventory: 100)
+    @pull_toy = @dog_shop.items.create(name: "Pull Toy", description: "Great pull toy!", price: 10, image: "http://lovencaretoys.com/image/cache/dog/tug-toy-dog-pull-9010_2-800x800.jpg", inventory: 100)
+
+    @user = User.create(name: "Nick", address: "123 North st", city: "Denver", state: "Colorado", zip: "80401", email: "12345@gmail.com", password: "password", role: 2, merchant_id: @bike_shop.id)
+
+    allow_any_instance_of(ApplicationController).to receive(:current_user).and_return(@user)
+  end
+
+  describe "When I visit a merchant items show page" do
+    it "I can see a link next to each item to create a discount for it" do
+
+      visit "/merchant/items"
+
+      within "#item-#{@tire.id}" do
+        click_on("Create a coupon for this item")
+        expect(current_path).to eq("/merchant/items/#{@tire.id}/coupons/new")
+        expect(page).to have_link("Create a coupon for this item")
+      end
+
+      within "#item-#{@chain.id}" do
+        expect(page).to have_link("Create a coupon for this item")
+        click_on("Create a coupon for this item")
+        expect(current_path).to eq("/merchant/items/#{@chain.id}/coupons/new")
+      end
+    end
+  end
+end
