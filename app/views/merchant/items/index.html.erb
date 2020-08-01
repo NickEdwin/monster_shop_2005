@@ -39,6 +39,7 @@
     <th>Minimum Purchase:</th>
     <th>Discount:</th>
     <th>Item:</th>
+    <th>Edit:</th>
   </tr>
   <% @coupons = Coupon.where(:merchant_id == current_user.merchant_id) %>
       <% @coupons.each do |coupon|  %>
@@ -47,7 +48,9 @@
           <th><%= coupon.min_items %></th>
           <th><%= coupon.discount %>%</th>
           <th><%= Item.find(coupon.item_id).name %></th>
+          <th><%=link_to "Delete", "/merchant/coupons/#{coupon.id}/delete", method: :delete%> | <%=link_to "Edit"%></th>
         </tr>
       <% end %>
+    </table>
   <% end %>
-  </center>
+</center>
