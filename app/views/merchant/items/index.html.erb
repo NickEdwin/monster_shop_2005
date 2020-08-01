@@ -24,6 +24,7 @@
         <% if item.orders.empty? %>
           <%= button_to "delete", "/merchant/items/#{item.id}/delete", method: :delete %>
         <% end %>
+        <%= link_to "Create a coupon for this item", "/merchant/items/#{item.id}/coupons/new" %>
         </section>
       </section>
     <% end %>
