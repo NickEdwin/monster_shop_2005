@@ -30,3 +30,24 @@
     <% end %>
   <% end %>
 </section>
+<% if Coupon.any? == true %>
+<center>
+  <h2>Current Offers</h2>
+  <table>
+  <tr>
+    <th>Coupon Name:</th>
+    <th>Minimum Purchase:</th>
+    <th>Discount:</th>
+    <th>Item:</th>
+  </tr>
+  <% @coupons = Coupon.where(:merchant_id == current_user.merchant_id) %>
+      <% @coupons.each do |coupon|  %>
+        <tr>
+          <th><%= coupon.name %></th>
+          <th><%= coupon.min_items %></th>
+          <th><%= coupon.discount %>%</th>
+          <th><%= Item.find(coupon.item_id).name %></th>
+        </tr>
+      <% end %>
+  <% end %>
+  </center>
