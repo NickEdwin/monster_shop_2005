@@ -85,17 +85,66 @@ RSpec.describe "As a merchant user" do
       expect(page).to have_content("#{@tire.name}")
     end
 
-    it "Can delete a coupon" do
+    it "It can delete a coupon" do
 
       visit("/merchant/items")
 
-      expect(page).to have_content("Delete | Edit")
-
-      click_on("Delete")
+      within(".coupon-#{@coupon_1.id}") do
+        expect(page).to have_content("Delete | Edit")
+        click_on("Delete")
+      end
 
       expect(page).to have_content("#{@coupon_1.name} was sucessfully deleted")
 
       expect(Coupon.any?).to eq(false)
+    end
+
+    it "It can edit a coupon" do
+
+      visit("/merchant/items")
+
+      within(".coupon-#{@coupon_1.id}") do
+        expect(page).to have_content("Delete | Edit")
+        click_on("Edit")
+      end
+
+      expect(current_path).to eq("/merchant/coupons/#{@coupon_1.id}/edit")
+
+      expect(page).to have_content("Edit #{@coupon_1.name}")
+
+      fill_in :name, with: "New Coupon Name"
+      fill_in :min_items, with: 20
+      fill_in :discount, with: 10
+
+      click_on("Update Coupon")
+
+      expect(current_path).to eq("/merchant/items")
+
+      expect(page).to have_content("New Coupon Name was successfully updated")
+
+      expect(page).to have_content("New Coupon Name")
+
+    end
+  end
+
+  describe "When I try and update a coupon" do
+    it "It can't edit a coupon and miss info" do
+
+      visit("/merchant/items")
+      
+      within(".coupon-#{@coupon_1.id}") do
+        click_on("Edit")
+      end
+
+      fill_in :name, with: ""
+      fill_in :min_items, with: 20
+      fill_in :discount, with: 10
+
+      click_on("Update Coupon")
+
+      expect(current_path).to eq("/merchant/coupons/#{@coupon_1.id}/edit")
+
+      expect(page).to have_content("Name can't be blank")
     end
   end
 end
