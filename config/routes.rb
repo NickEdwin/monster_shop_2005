@@ -65,6 +65,8 @@ Rails.application.routes.draw do
     get "/items/:item_id/coupons/new", to: "coupons#new"
     post "/items/:item_id/coupons/new", to: "coupons#create"
     delete "/coupons/:coupon_id/delete", to: "coupons#destroy"
+    get "/coupons/:coupon_id/edit", to: "coupons#edit"
+    post "/coupons/:coupon_id/update", to: "coupons#update"
   end
 
   namespace :admin do
