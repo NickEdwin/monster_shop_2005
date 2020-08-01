@@ -131,7 +131,7 @@ RSpec.describe "As a merchant user" do
     it "It can't edit a coupon and miss info" do
 
       visit("/merchant/items")
-      
+
       within(".coupon-#{@coupon_1.id}") do
         click_on("Edit")
       end
@@ -145,6 +145,58 @@ RSpec.describe "As a merchant user" do
       expect(current_path).to eq("/merchant/coupons/#{@coupon_1.id}/edit")
 
       expect(page).to have_content("Name can't be blank")
+    end
+  end
+
+  describe "When a user visits their cart" do
+    it "It increments to coupon threshold and then they display" do
+
+      visit "/items/#{@tire.id}"
+      click_on "Add To Cart"
+
+      visit("/cart")
+
+      visit "/items/#{@chain.id}"
+      click_on "Add To Cart"
+
+      visit("/cart")
+
+      within("#cart-item-#{@tire.id}") do
+        expect(page).to have_content("1")
+        expect(page).to_not have_content("Discount applied!")
+      end
+
+      within("#cart-item-#{@tire.id}") do
+        20.times do click_on("Increase Amount") end
+        expect(page).to have_content("21")
+        expect(page).to have_content("Discount applied!")
+      end
+
+      within("#cart-item-#{@chain.id}") do
+        expect(page).to have_content("1")
+        expect(page).to_not have_content("Discount applied!")
+      end
+    end
+
+    describe "when a user visits their cart" do
+      it "displays all coupons site wide" do
+
+        visit("/cart")
+
+        expect(page).to have_content("The Following Items have Eligable Coupons:")
+        expect(page).to have_content("#{@tire.name}: #{@coupon_1.name} - Sold by: #{@bike_shop.name}")
+
+        visit("/merchant/items")
+
+        within(".coupon-#{@coupon_1.id}") do
+          click_on("Delete")
+        end
+
+        visit("/cart")
+
+        expect(page).to_not have_content("The Following Items have Eligable Coupons:")
+        expect(page).to_not have_content("#{@tire.name}: #{@coupon_1.name} - Sold by: #{@bike_shop.name}")
+      end
     end
   end
 end
