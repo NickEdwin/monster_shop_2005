@@ -20,8 +20,6 @@ RSpec.describe "As a merchant user" do
       visit "/merchant/items"
 
       within "#item-#{@tire.id}" do
-        click_on("Create a coupon for this item")
-        expect(current_path).to eq("/merchant/items/#{@tire.id}/coupons/new")
         expect(page).to have_link("Create a coupon for this item")
       end
 
@@ -30,6 +28,42 @@ RSpec.describe "As a merchant user" do
         click_on("Create a coupon for this item")
         expect(current_path).to eq("/merchant/items/#{@chain.id}/coupons/new")
       end
+    end
+  end
+
+  describe "When I visit the form to create a new coupon" do
+    it "I can enter the details for coupon creation" do
+
+    visit("/merchant/items/#{@tire.id}/coupons/new")
+
+    expect(page).to have_content("Create a new coupon for #{@tire.name}")
+
+    fill_in :name, with: "buy 20, save 10%"
+    fill_in :min_items, with: 20
+    fill_in :discount, with: 10
+
+    click_on("Create Coupon")
+
+    expect(current_path).to eq("/merchant/items")
+
+    expect(page).to have_content("Your coupon has been created")
+    end
+  end
+
+  describe "When I try to make a coupon with bad information" do
+    it "It can't be created" do
+
+    visit("/merchant/items/#{@tire.id}/coupons/new")
+
+    fill_in :name, with: ""
+    fill_in :min_items, with: 20
+    fill_in :discount, with: 10
+
+    click_on("Create Coupon")
+
+    expect(current_path).to eq("/merchant/items/#{@tire.id}/coupons/new")
+
+    expect(page).to have_content("Name can't be blank")
     end
   end
 end
