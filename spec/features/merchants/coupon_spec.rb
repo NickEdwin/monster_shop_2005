@@ -223,5 +223,24 @@ RSpec.describe "As a merchant user" do
         end
       end
     end
+
+    describe "When coupons are applied" do
+      it "cart subtotal also changes" do
+        visit "/items/#{@tire.id}"
+        click_on "Add To Cart"
+        visit("/cart")
+
+        expect(page).to have_content("Total: $100.00")
+
+        within("#cart-item-#{@tire.id}") do
+          19.times do click_on("Increase Amount") end
+          expect(page).to have_content("20")
+          expect(page).to have_content("Discount applied!")
+          expect(page).to have_content("$1,800.00")
+        end
+
+        expect(page).to have_content("Total: $1,800.00")
+      end
+    end
   end
 end
