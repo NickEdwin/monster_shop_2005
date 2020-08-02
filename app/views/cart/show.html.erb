@@ -50,7 +50,6 @@
             <% if (quantity >= coupon.min_items) && (coupon.item_id == item.id) %>
               <p><%= number_to_currency(quantity * cart.discount(item)) %></p>
               <p>Discount applied!</p>
-              <p>*Price adjusted at checkout*</p>
             <% else %>
               <p><%= number_to_currency(cart.subtotal(item)) %></p>
               <% end %>

@@ -12,7 +12,7 @@
         <p><%= link_to "Order Id: #{order.id}", "/merchant/orders/#{order.id}" %></p>
         <p>Created At: <%= order.created_at %></p>
         <p>Total Quantity of Items: <%= order.item_orders.where('item_orders.merchant_id = ?', @merchant.id).sum(:quantity) %></p>
-        <p>Total Value of Items: <%= number_to_currency(order.item_orders.where('item_orders.merchant_id = ?', @merchant.id).sum('quantity * price')) %></p>
+        <p>Total Value of Items: <%= number_to_currency(order.order_total) %></p>
         </li>
       </section>
     <% end %>
