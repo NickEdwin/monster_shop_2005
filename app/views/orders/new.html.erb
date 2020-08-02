@@ -13,7 +13,16 @@
       <td><h2><%= link_to item.name, "/items/#{item.id}" %></h2></td>
       <td><p><%= number_to_currency(item.price) %></p></td>
       <td><p><%= quantity %></p></td>
-      <td><p><%= number_to_currency(cart.subtotal(item)) %></p><td>
+      <% if cart.discount(item) == item.price %>
+        <td><p><%= number_to_currency(cart.subtotal(item)) %></p></td>
+      <% else @coupons.find do |coupon| %>
+        <% if (quantity >= coupon.min_items) && (coupon.item_id == item.id) %>
+          <td><p><%= number_to_currency(quantity * cart.discount(item)) %><p>Discount applied!</p></p></td>
+          <% else %>
+          <td><p><%= number_to_currency(cart.subtotal(item)) %></p></td>
+        <% end %>
+      <% end %>
+      <% end %>
       <td><p><%= link_to item.merchant.name, "/merchants/#{item.merchant_id}" %></p></td>
       <td><p><%= item.inventory %> in stock</p></td>
     </tr>
@@ -42,6 +51,8 @@
 
         <%= label_tag :zip %>
         <%= number_field_tag :zip %>
+
+        <%= hidden_field_tag :order_total, cart.total%>
 
         <%= submit_tag 'Create Order' %>
       <% end %>

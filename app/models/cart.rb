@@ -22,18 +22,29 @@ class Cart
     item_quantity
   end
 
-  def subtotal(item)
+  def subtotal(item) 
     item.price * @contents[item.id.to_s]
   end
 
   def total
     @contents.sum do |item_id,quantity|
-      Item.find(item_id).price * quantity
+      item = Item.find(item_id)
+      if Coupon.where(item_id: item.id).order('discount DESC').first.nil?
+        item.price * quantity
+      elsif (quantity >= (Coupon.where(item_id: item.id).order('discount DESC').first.min_items))
+        discount(item) * quantity
+      else
+        item.price * quantity
+      end
     end
   end
 
   def discount(item)
     discount = Coupon.where(item_id: item.id).maximum(:discount)
-    item.price - (item.price * (discount / 100))
+    if discount == nil
+      item.price
+    else
+      item.price - (item.price * (discount / 100))
+    end
   end
 end

@@ -198,5 +198,49 @@ RSpec.describe "As a merchant user" do
         expect(page).to_not have_content("#{@tire.name}: #{@coupon_1.name} - Sold by: #{@bike_shop.name}")
       end
     end
+
+    describe "when there are two coupons for one item" do
+      it "uses the higher discount" do
+
+        coupon_2 = Coupon.create(name: "Buy 50 get 50!", min_items: 50, discount: 50, merchant_id: @bike_shop.id, item_id: @tire.id)
+
+        visit "/items/#{@tire.id}"
+        click_on "Add To Cart"
+        visit("/cart")
+
+        within("#cart-item-#{@tire.id}") do
+          20.times do click_on("Increase Amount") end
+          expect(page).to have_content("21")
+          expect(page).to have_content("Discount applied!")
+          expect(page).to have_content("$1,050.00")
+        end
+
+        within("#cart-item-#{@tire.id}") do
+          29.times do click_on("Increase Amount") end
+          expect(page).to have_content("50")
+          expect(page).to have_content("Discount applied!")
+          expect(page).to have_content("$2,500.00")
+        end
+      end
+    end
+
+    describe "When coupons are applied" do
+      it "cart subtotal also changes" do
+        visit "/items/#{@tire.id}"
+        click_on "Add To Cart"
+        visit("/cart")
+
+        expect(page).to have_content("Total: $100.00")
+
+        within("#cart-item-#{@tire.id}") do
+          19.times do click_on("Increase Amount") end
+          expect(page).to have_content("20")
+          expect(page).to have_content("Discount applied!")
+          expect(page).to have_content("$1,800.00")
+        end
+
+        expect(page).to have_content("Total: $1,800.00")
+      end
+    end
   end
 end
