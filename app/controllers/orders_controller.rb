@@ -1,5 +1,6 @@
 class OrdersController <ApplicationController
   def new
+    @coupons = Coupon.all
   end
 
   def show
@@ -17,7 +18,7 @@ class OrdersController <ApplicationController
         order.item_orders.create({
           item: item,
           quantity: quantity,
-          price: item.price,
+          price: (quantity * cart.discount(item)),
           merchant_id: item_to_pull.merchant_id
           })
       end
@@ -47,6 +48,6 @@ class OrdersController <ApplicationController
   private
 
   def order_params
-    params.permit(:name, :address, :city, :state, :zip)
+    params.permit(:name, :address, :city, :state, :zip, :order_total)
   end
 end
