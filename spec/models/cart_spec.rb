@@ -58,4 +58,41 @@ RSpec.describe Cart do
       expect(@cart.discount(@hippo)).to eq(25)
     end
   end
+
+  describe "Instance Method sad path tests" do
+    before :each do
+      @megan = Merchant.create!(name: 'Megans Marmalades', address: '123 Main St', city: 'Denver', state: 'CO', zip: 80218)
+      @brian = Merchant.create!(name: 'Brians Bagels', address: '125 Main St', city: 'Denver', state: 'CO', zip: 80218)
+      @ogre = @megan.items.create!(name: 'Ogre', description: "I'm an Ogre!", price: 20, image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTaLM_vbg2Rh-mZ-B4t-RSU9AmSfEEq_SN9xPP_qrA2I6Ftq_D9Qw', inventory: 5 )
+      @giant = @megan.items.create!(name: 'Giant', description: "I'm a Giant!", price: 50, image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTaLM_vbg2Rh-mZ-B4t-RSU9AmSfEEq_SN9xPP_qrA2I6Ftq_D9Qw', inventory: 2 )
+      @hippo = @brian.items.create!(name: 'Hippo', description: "I'm a Hippo!", price: 50, image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTaLM_vbg2Rh-mZ-B4t-RSU9AmSfEEq_SN9xPP_qrA2I6Ftq_D9Qw', inventory: 3 )
+
+      @user = User.create!(name: "Nick", address: "123 Main St", city: "Denver", state: "CO", zip: "80439", email: "myemail@email.com", password: "password", role: 1)
+
+      @cart = Cart.new({
+        @ogre.id.to_s => 1,
+        @giant.id.to_s => 2
+        })
+
+      @coupon_1 = Coupon.create!(name: "Buy 20 save 10%", min_items: 10, discount: 50, merchant_id: @brian.id, item_id: @ogre.id)
+
+    end
+    it ".discount() without a coupon" do
+      expect(@cart.discount(@ogre)).to eq(10)
+      expect(@cart.discount(@giant)).to eq(50)
+    end
+
+    it ".total without a coupon" do
+      expect(@cart.total).to eq(120)
+    end
+
+    it ".total with a coupon at min amount of items" do
+      @cart2 = Cart.new({
+        @ogre.id.to_s => 10,
+        @giant.id.to_s => 2
+        })
+
+      expect(@cart2.total).to eq(200)
+    end
+  end
 end
