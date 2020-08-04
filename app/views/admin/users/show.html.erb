@@ -1,7 +1,11 @@
 <h1>Information for user <%= @user.name %> </h1>
-
-<p>Address: <%= @user.address %></p>
-<p>City: <%= @user.city %></p>
-<p>State: <%= @user.state %></p>
-<p>Zip code: <%= @user.zip %></p>
 <p>Email: <%= @user.email %></p>
+
+<h3>Addresses on file:</h3>
+<% @user.user_addresses.each do |address| %>
+  <p>Name: <%= address.nickname %></p>
+  <p>Address: <%= address.address %></p>
+  <p>City: <%= address.city %></p>
+  <p>State: <%= address.state %></p>
+  <p>Zip code: <%= address.zip %></p>
+<% end %>

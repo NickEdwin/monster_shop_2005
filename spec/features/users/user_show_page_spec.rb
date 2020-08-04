@@ -3,7 +3,8 @@ require 'rails_helper'
 RSpec.describe "default user show page" do
   before :each do
 
-  @user = User.create(name: "Megan", address: "123 North st", city: "Denver", state: "Colorado", zip: "80401", email: "12345@gmail.com", password: "password", role: 1)
+  @user = User.create!(name: "Megan", email: "12345@gmail.com", password: "password", role: 1)
+  @address = UserAddress.create!(address: "123 North st", city: "Denver", state: "CO", zip: "80401", user_id: @user.id)
   @meg = Merchant.create(name: "Meg's Bike Shop", address: '123 Bike Rd.', city: 'Denver', state: 'CO', zip: 80203)
   @tire = @meg.items.create(name: "Gatorskins", description: "They'll never pop!", price: 100, image: "https://www.rei.com/media/4e1f5b05-27ef-4267-bb9a-14e35935f218?size=784x588", inventory: 12)
 
@@ -18,7 +19,7 @@ RSpec.describe "default user show page" do
       expect(page).to have_content("Megan")
       expect(page).to have_content("Address: 123 North st")
       expect(page).to have_content("City: Denver")
-      expect(page).to have_content("State: Colorado")
+      expect(page).to have_content("State: CO")
       expect(page).to have_content("Zip code: 80401")
       expect(page).to have_content("Email: 12345@gmail.com")
 

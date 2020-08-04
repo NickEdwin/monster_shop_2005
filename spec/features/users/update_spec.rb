@@ -2,7 +2,8 @@ require "rails_helper"
 
 RSpec.describe "a default user" do
   it "can update their profile data" do
-    user = User.create(name: "Megan", address: "123 North st", city: "Denver", state: "Colorado", zip: "80401", email: "12345@gmail.com", password: "password", role: 1)
+    user = User.create!(name: "Megan", email: "12345@gmail.com", password: "password", role: 1)
+    address = UserAddress.create!(address: "123 North st", city: "Denver", state: "CO", zip: "80401", user_id: user.id)
 
     allow_any_instance_of(ApplicationController).to receive(:current_user).and_return(user)
 
@@ -15,7 +16,7 @@ RSpec.describe "a default user" do
     expect(page).to have_field(:name, with: 'Megan')
     expect(page).to have_field(:address, with: '123 North st')
     expect(page).to have_field(:city, with: 'Denver')
-    expect(page).to have_field(:state, with: 'Colorado')
+    expect(page).to have_field(:state, with: 'CO')
     expect(page).to have_field(:zip, with: '80401')
     expect(page).to have_field(:email, with: "12345@gmail.com")
 
@@ -44,7 +45,8 @@ RSpec.describe "a default user" do
   end
 
   it "displays flash message if an update field is left blank" do
-    user = User.create(name: "Megan", address: "123 North st", city: "Denver", state: "Colorado", zip: "80401", email: "12345@gmail.com", password: "password", role: 1)
+    user = User.create!(name: "Nick", email: "12345@gmail.com", password: "password", role: 1)
+    address = UserAddress.create!(address: "123 Main St", city: "Denver", state: "CO", zip: "80439", user_id: user.id)
 
     allow_any_instance_of(ApplicationController).to receive(:current_user).and_return(user)
 
@@ -62,14 +64,14 @@ RSpec.describe "a default user" do
     click_on "Update Profile"
 
     expect(current_path).to eq("/users/edit")
-
     expect(page).to have_content("Name can't be blank")
     expect(page).to have_content("City can't be blank")
     expect(page).to have_content("Zip can't be blank")
   end
 
   it "can update password" do
-    user = User.create(name: "Megan", address: "123 North st", city: "Denver", state: "Colorado", zip: "80401", email: "12345@gmail.com", password: "password", role: 1)
+    user = User.create!(name: "Nick", email: "12345@gmail.com", password: "password", role: 1)
+    address = UserAddress.create!(address: "123 Main St", city: "Denver", state: "CO", zip: "80439", user_id: user.id)
 
     allow_any_instance_of(ApplicationController).to receive(:current_user).and_return(user)
 
@@ -97,7 +99,8 @@ RSpec.describe "a default user" do
   end
 
   it "displays flash message if password update fields are left blank" do
-    user = User.create(name: "Megan", address: "123 North st", city: "Denver", state: "Colorado", zip: "80401", email: "12345@gmail.com", password: "password", role: 1)
+    user = User.create!(name: "Nick", email: "12345@gmail.com", password: "password", role: 1)
+    address = UserAddress.create!(address: "123 Main St", city: "Denver", state: "CO", zip: "80439", user_id: user.id)
 
     allow_any_instance_of(ApplicationController).to receive(:current_user).and_return(user)
 

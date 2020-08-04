@@ -9,7 +9,8 @@ RSpec.describe "As a merchant user" do
     @tire = @bike_shop.items.create(name: "Tire", description: "You're gonna need two!", price: 100, image: "https://www.vittoria.com/us/pub/media/catalog/product/cache/c687aa7517cf01e65c009f6943c2b1e9/2/5/25bfb7bd-8a1a-431b-8a50-a5246df33dd2.png", inventory: 100)
     @pull_toy = @dog_shop.items.create(name: "Pull Toy", description: "Great pull toy!", price: 10, image: "http://lovencaretoys.com/image/cache/dog/tug-toy-dog-pull-9010_2-800x800.jpg", inventory: 100)
 
-    @user = User.create(name: "Nick", address: "123 North st", city: "Denver", state: "Colorado", zip: "80401", email: "12345@gmail.com", password: "password", role: 2, merchant_id: @bike_shop.id)
+    @user = User.create!(name: "Nick", email: "12345@gmail.com", password: "password", role: 2, merchant_id: @bike_shop.id)
+    @address = UserAddress.create!(address: "123 Main St", city: "Denver", state: "CO", zip: "80439", user_id: @user.id)
 
     @coupon_1 = Coupon.create(name: "Buy 20 save 10%", min_items: 20, discount: 10, merchant_id: @bike_shop.id, item_id: @tire.id)
 

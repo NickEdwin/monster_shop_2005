@@ -5,7 +5,8 @@ RSpec.describe "As a user" do
     before(:each) do
       @bike_shop = Merchant.create(name: "Brian's Bike Shop", address: '123 Bike Rd.', city: 'Richmond', state: 'VA', zip: 11234)
       @car_shop = Merchant.create(name: "Brian's Car Shop", address: '123 Bike Rd.', city: 'Richmond', state: 'VA', zip: 11234)
-      @user = User.create(name: "Megan", address: "123 North st", city: "Denver", state: "Colorado", zip: "80401", email: "12345@gmail.com", password: "password", role: 2, merchant_id: @bike_shop.id)
+      @user = User.create!(name: "Megan", email: "12345@gmail.com", password: "password", role: 2, merchant_id: @bike_shop.id)
+      @address = UserAddress.create!(address: "123 Main St", city: "Denver", state: "CO", zip: "80439", user_id: @user.id)
       @tire = @bike_shop.items.create(name: "Gatorskins", description: "They'll never pop!", price: 100, image: "https://www.rei.com/media/4e1f5b05-27ef-4267-bb9a-14e35935f218?size=784x588", inventory: 12)
       @frame = @bike_shop.items.create(name: "Bike Frame", description: "Super lightweight!", price: 300, image: "https://www.rei.com/media/4e1f5b05-27ef-4267-bb9a-14e35935f218?size=784x588", inventory: 2)
       @cruiser = @bike_shop.items.create(name: "Cruiser Bike", description: "Great for the beach!", price: 1000, image: "https://www.rei.com/media/4e1f5b05-27ef-4267-bb9a-14e35935f218?size=784x588", inventory: 9)
@@ -104,7 +105,8 @@ RSpec.describe "As a user" do
           click_on "Fulfill Order"
         end
 
-        user_admin = User.create(name: "Rick", address: "123 Rick st", city: "Denver", state: "Colorado", zip: "80401", email: "1234567@gmail.com", password: "password", role: 3)
+        user_admin = User.create!(name: "Nick", email: "1234567@gmail.com", password: "password", role: 3)
+        address = UserAddress.create!(address: "123 Main St", city: "Denver", state: "CO", zip: "80439", user_id: user_admin.id)
 
         allow_any_instance_of(ApplicationController).to receive(:current_user).and_return(user_admin)
 

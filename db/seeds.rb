@@ -35,7 +35,11 @@ leash = merchant_3.items.create(name: "Leash", description: "Keep your dog close
 
 # users
 
-default_user = User.create!(name: "Nick", address: "123 Main St", city: "Denver", state: "CO", zip: "80439", email: "default_user@email.com", password: "password", role: 1)
-merchant_1_user = User.create!(name: "Megan", address: "123 North St", city: "Salt Lake City", state: "UT", zip: "89383", email: "merchant_1_user@email.com", password: "password", role: 2, merchant_id: merchant_1.id)
-merchant_3_user = User.create!(name: "Rachel", address: "123 East St", city: "Orangeville", state: "CA", zip: "84443", email: "merchant_3_user@email.com", password: "password", role: 2, merchant_id: merchant_3.id)
-admin_user = User.create!(name: "Lola", address: "123 South St", city: "Walla Walla", state: "WA", zip: "88888", email: "admin_user@email.com", password: "password", role: 3)
+default_user = User.create!(name: "Nick", email: "default_user@email.com", password: "password", role: 1)
+UserAddress.create!(address: "123 Main St", city: "Denver", state: "CO", zip: "80439", user_id: default_user.id)
+merchant_1_user = User.create!(name: "Megan", email: "merchant_1_user@email.com", password: "password", role: 2, merchant_id: merchant_1.id)
+UserAddress.create!(address: "123 North St", city: "Salt Lake City", state: "UT", zip: "89383", user_id: merchant_1_user.id)
+merchant_3_user = User.create!(name: "Rachel", email: "merchant_3_user@email.com", password: "password", role: 2, merchant_id: merchant_3.id)
+UserAddress.create!(address: "123 East St", city: "Orangeville", state: "CA", zip: "84443", user_id: merchant_3_user.id)
+admin_user = User.create!(name: "Lola", email: "admin_user@email.com", password: "password", role: 3)
+UserAddress.create!(address: "123 South St", city: "Walla Walla", state: "WA", zip: "88888", user_id: admin_user.id)

@@ -1,12 +1,20 @@
 <h1>Hello <%= @user.name %></h1>
-<p>Address: <%= @user.address %></p>
-<p>City: <%= @user.city %></p>
-<p>State: <%= @user.state %></p>
-<p>Zip code: <%= @user.zip %></p>
 <p>Email: <%= @user.email %></p>
-
-<%= link_to "Edit Profile", "/users/edit" %> |
+<%= link_to "Create New Address", "/users/#{@user.id}/address/new" %> |
 <%= link_to "Edit Password", "/users/password/edit" %>
+<h3>Addresses on file:</h3>
+<% @user.user_addresses.each do |address| %>
+  <p>Nickname: <%= address.nickname %></p>
+  <p>Address: <%= address.address %></p>
+  <p>City: <%= address.city %></p>
+  <p>State: <%= address.state %></p>
+  <p>Zip code: <%= address.zip %></p>
+  <%= link_to "Edit #{address.nickname}", "/users/address/#{address.id}/edit" %> |
+  <%= link_to "Delete #{address.nickname}", "/users/#{@user.id}/address/destroy" %>
+  <hr>
+<% end %>
+
+
 <% if current_user.orders.any? %>
   | <%= link_to "My Orders", "/profile/orders" %>
 <% end  %>

@@ -23,7 +23,8 @@ describe Item, type: :model do
     before(:each) do
       @bike_shop = Merchant.create(name: "Brian's Bike Shop", address: '123 Bike Rd.', city: 'Denver', state: 'CO', zip: 80203)
       @chain = @bike_shop.items.create(name: "Chain", description: "It'll never break!", price: 50, image: "https://www.rei.com/media/b61d1379-ec0e-4760-9247-57ef971af0ad?size=784x588", inventory: 5)
-      @user = User.create!(name: "Nick", address: "123 Main St", city: "Denver", state: "CO", zip: "80439", email: "myemailisgreat@email.com", password: "password", role: 1)
+      @user = User.create!(name: "Nick", email: "myemail@email.com", password: "password", role: 1)
+      @address = UserAddress.create!(address: "123 Main St", city: "Denver", state: "CO", zip: "80439", user_id: @user.id)
       @review_1 = @chain.reviews.create(title: "Great place!", content: "They have great bike stuff and I'd recommend them to anyone.", rating: 5)
       @review_2 = @chain.reviews.create(title: "Cool shop!", content: "They have cool bike stuff and I'd recommend them to anyone.", rating: 4)
       @review_3 = @chain.reviews.create(title: "Meh place", content: "They have meh bike stuff and I probably won't come back", rating: 1)
@@ -51,13 +52,15 @@ describe Item, type: :model do
     end
 
     it 'quantity_ordered' do
-      user_1 = User.create!(name: "Nick", address: "123 Main St", city: "Denver", state: "CO", zip: "80439", email: "myemail@email.com", password: "password", role: 1)
+      user_1 = User.create!(name: "Nick", email: "myemail123@email.com", password: "password", role: 1)
+      address1 = UserAddress.create!(address: "123 Main St", city: "Denver", state: "CO", zip: "80439", user_id: user_1.id)
 
       order_1 = Order.create!(name: 'Meg', address: '123 Stang Ave', city: 'Hershey', state: 'PA', zip: 17033, status: "shipped", user_id: user_1.id)
 
       order_1.item_orders.create!(item: @chain, price: @chain.price, quantity: 3)
 
-      user_2 = User.create(name: "Tim", address: "123 North st", city: "Denver", state: "Colorado", zip: "80401", email: "1234gmail.com", password: "password", role: 1)
+      user_2 = User.create!(name: "Tim", email: "myemail1234@email.com", password: "password", role: 1)
+      address2 = UserAddress.create!(address: "123 Main St", city: "Denver", state: "CO", zip: "80439", user_id: user_2.id)
 
       order_2 = Order.create!(name: 'Meg', address: '123 Stang Ave', city: 'Hershey', state: 'PA', zip: 17033, status: "pending", user_id: user_1.id)
 
@@ -91,7 +94,8 @@ describe Item, type: :model do
       @stuffed_animal = @merchant_3.items.create(name: "Stuffed Animal", description: "Your dogs favorite cuddle buddy", image: "https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcSdrF1u_GSYOgpnRJ-2EC87fkfF8sVBC2LZ4A&usqp=CAU", price: 15, inventory: 15)
       @leash = @merchant_3.items.create(name: "Leash", description: "Keep your dog close by", price: 15, image: "https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcSdrF1u_GSYOgpnRJ-2EC87fkfF8sVBC2LZ4A&usqp=CAU", inventory: 5)
 
-      @user_1 = User.create!(name: "Nick", address: "123 Main St", city: "Denver", state: "CO", zip: "80439", email: "myemail@email.com", password: "password", role: 1)
+      @user_1 = User.create!(name: "Nick", email: "myemail@email.com", password: "password", role: 1)
+      @address = UserAddress.create!(address: "123 Main St", city: "Denver", state: "CO", zip: "80439", user_id: @user_1.id)
 
       @order_1 = Order.create!(name: 'Meg', address: '123 Stang Ave', city: 'Hershey', state: 'PA', zip: 17033, status: "shipped", user_id: @user_1.id)
 
@@ -102,7 +106,8 @@ describe Item, type: :model do
       @order_1.item_orders.create!(item: @pencil, price: @pencil.price, quantity: 85)
       @order_1.item_orders.create!(item: @calculator, price: @calculator.price, quantity: 1)
 
-      @user_2 = User.create(name: "Tim", address: "123 North st", city: "Denver", state: "Colorado", zip: "80401", email: "1234@gmail.com", password: "password", role: 1)
+      @user_2 = User.create!(name: "Tim", email: "myemail2@email.com", password: "password", role: 1)
+      @address2 = UserAddress.create!(address: "123 Main St", city: "Denver", state: "CO", zip: "80439", user_id: @user_2.id)
 
       @order_2 = Order.create!(name: 'Meg', address: '123 Stang Ave', city: 'Hershey', state: 'PA', zip: 17033, status: "pending", user_id: @user_2.id)
 
@@ -114,7 +119,8 @@ describe Item, type: :model do
       @order_2.item_orders.create!(item: @stuffed_animal, price: @stuffed_animal.price, quantity: 2)
       @order_2.item_orders.create!(item: @tire, price: @tire.price, quantity: 3)
 
-      @user_3 = User.create(name: "Tim", address: "123 North st", city: "Denver", state: "Colorado", zip: "80401", email: "123456789@gmail.com", password: "password", role: 1)
+      @user_3 = User.create!(name: "Mike", email: "myemail3@email.com", password: "password", role: 1)
+      @address3 = UserAddress.create!(address: "123 Main St", city: "Denver", state: "CO", zip: "80439", user_id: @user_3.id)
 
       @order_3 = Order.create!(name: 'Meg', address: '123 Stang Ave', city: 'Hershey', state: 'PA', zip: 17033, status: "pending", user_id: @user_3.id)
 

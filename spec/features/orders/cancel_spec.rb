@@ -1,7 +1,8 @@
 RSpec.describe("Order Cancellation") do
   describe "As a user when I visit an order's show page" do
     before(:each) do
-      @user = User.create(name: "Nick", address: "123 Main St", city: "Denver", state: "CO", zip: "80439", email: "myemail@email.com", password: "password", role: 1)
+      @user = User.create!(name: "Nick", email: "12345@gmail.com", password: "password", role: 1)
+      @address = UserAddress.create!(address: "123 Main St", city: "Denver", state: "CO", zip: "80439", user_id: @user.id)
 
       @mike = Merchant.create(name: "Mike's Print Shop", address: '123 Paper Rd.', city: 'Denver', state: 'CO', zip: 80203)
       @meg = Merchant.create(name: "Meg's Bike Shop", address: '123 Bike Rd.', city: 'Denver', state: 'CO', zip: 80203)
@@ -23,13 +24,13 @@ RSpec.describe("Order Cancellation") do
       visit "/cart"
       click_on "Checkout"
     end
-  
+
     it "I see a button or link to cancel the order" do
-    
+
       expect(Item.find(@tire.id).inventory).to eq(12)
       expect(Item.find(@paper.id).inventory).to eq(3)
       expect(Item.find(@pencil.id).inventory).to eq(100)
-      
+
       name = "Bert"
       address = "123 Sesame St."
       city = "NYC"
@@ -43,16 +44,16 @@ RSpec.describe("Order Cancellation") do
       fill_in :zip, with: zip
 
       click_button "Create Order"
-      
+
             expect(current_path).to eq("/profile/orders")
 
       new_order = Order.last
       click_link "#{new_order.id}"
-      
+
       expect(Item.find(@tire.id).inventory).to eq(11)
       expect(Item.find(@paper.id).inventory).to eq(1)
       expect(Item.find(@pencil.id).inventory).to eq(99)
-      
+
       item_orders = ItemOrder.where("order_id = ?", new_order.id)
       item_orders.each do |item_order|
         expect(item_order.status).to eq("nil")
@@ -62,37 +63,37 @@ RSpec.describe("Order Cancellation") do
       orders.each do |order|
         expect(order.status).to eq("pending")
       end
-      
+
       expect(current_path).to eq("/orders/#{new_order.id}")
-            
+
       click_link "Cancel Order"
-      
+
       expect(current_path).to eq("/profile")
-  
+
       expect(page).to have_content("Your order is now cancelled!")
-      
+
       expect(Item.find(@tire.id).inventory).to eq(12)
       expect(Item.find(@paper.id).inventory).to eq(3)
       expect(Item.find(@pencil.id).inventory).to eq(100)
-      
+
       item_orders = ItemOrder.where("order_id = ?", new_order.id)
       item_orders.each do |item_order|
         expect(item_order.status).to eq("unfulfilled")
       end
-      
+
       orders = Order.where("id = ?", new_order.id)
       orders.each do |order|
         expect(order.status).to eq("cancelled")
       end
-      
+
       click_link "My Orders"
-  
+
       expect(page).to have_content("Order Number: #{new_order.id}")
       expect(page).to have_content("Order Status: cancelled")
-      
-    
-      
-      
+
+
+
+
       #x       As a registered user
       #x When I visit an order's show page
       #x I see a button or link to cancel the order
@@ -104,6 +105,6 @@ RSpec.describe("Order Cancellation") do
       # - I see a flash message telling me the order is now cancelled
       # - And I see that this order now has an updated status of "cancelled"
     end
-    
+
   end
 end

@@ -83,7 +83,8 @@ RSpec.describe "Items Index Page" do
       stuffed_animal = merchant_3.items.create(name: "Stuffed Animal", description: "Your dogs favorite cuddle buddy", image: "https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcSdrF1u_GSYOgpnRJ-2EC87fkfF8sVBC2LZ4A&usqp=CAU", price: 15, inventory: 15)
       leash = merchant_3.items.create(name: "Leash", description: "Keep your dog close by", price: 15, image: "https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcSdrF1u_GSYOgpnRJ-2EC87fkfF8sVBC2LZ4A&usqp=CAU", inventory: 5)
 
-      user_1 = User.create!(name: "Nick", address: "123 Main St", city: "Denver", state: "CO", zip: "80439", email: "myemail@email.com", password: "password", role: 1)
+      user_1 = User.create!(name: "Nick", email: "myemail@email.com", password: "password", role: 1)
+      address = UserAddress.create!(address: "123 Main St", city: "Denver", state: "CO", zip: "80439", user_id: user_1.id)
 
       order_1 = Order.create!(name: 'Meg', address: '123 Stang Ave', city: 'Hershey', state: 'PA', zip: 17033, status: "shipped", user_id: user_1.id)
 
@@ -94,7 +95,8 @@ RSpec.describe "Items Index Page" do
       order_1.item_orders.create!(item: pencil, price: pencil.price, quantity: 85)
       order_1.item_orders.create!(item: calculator, price: calculator.price, quantity: 1)
 
-      user_2 = User.create(name: "Tim", address: "123 North st", city: "Denver", state: "Colorado", zip: "80401", email: "1234@gmail.com", password: "password", role: 1)
+      user_2 = User.create!(name: "Nick", email: "1234@email.com", password: "password", role: 1)
+      address = UserAddress.create!(address: "123 Main St", city: "Denver", state: "CO", zip: "80439", user_id: user_2.id)
 
       order_2 = Order.create!(name: 'Meg', address: '123 Stang Ave', city: 'Hershey', state: 'PA', zip: 17033, status: "pending", user_id: user_2.id)
 
@@ -106,7 +108,8 @@ RSpec.describe "Items Index Page" do
       order_2.item_orders.create!(item: stuffed_animal, price: stuffed_animal.price, quantity: 2)
       order_2.item_orders.create!(item: tire, price: tire.price, quantity: 3)
 
-      user_3 = User.create(name: "Tim", address: "123 North st", city: "Denver", state: "Colorado", zip: "80401", email: "123456789@gmail.com", password: "password", role: 1)
+      user_3 = User.create!(name: "Mike", email: "12345@email.com", password: "password", role: 1)
+      address = UserAddress.create!(address: "123 Main St", city: "Denver", state: "CO", zip: "80439", user_id: user_3.id)
 
       order_3 = Order.create!(name: 'Meg', address: '123 Stang Ave', city: 'Hershey', state: 'PA', zip: 17033, status: "pending", user_id: user_3.id)
 
@@ -173,7 +176,8 @@ RSpec.describe "Items Index Page" do
 
     describe "a default user visits the items index page" do
       it "can see all enabled items and can click on image to link to item show page" do
-        user = User.create(name: "Nick", role: 1)
+        user = User.create!(name: "Nick", email: "myemail1@email.com", password: "password", role: 1)
+        address = UserAddress.create!(address: "123 Main St", city: "Denver", state: "CO", zip: "80439", user_id: user.id)
 
         allow_any_instance_of(ApplicationController).to receive(:current_user).and_return(user)
 
@@ -193,7 +197,8 @@ RSpec.describe "Items Index Page" do
 
     describe "a merchant visits the items index page" do
       it "can see all enabled items and can click on image to link to item show page" do
-        user = User.create(name: "Nick", role: 2)
+        user = User.create!(name: "Nick", email: "myemail12@email.com", password: "password", role: 2)
+        address = UserAddress.create!(address: "123 Main St", city: "Denver", state: "CO", zip: "80439", user_id: user.id)
 
         allow_any_instance_of(ApplicationController).to receive(:current_user).and_return(user)
 
@@ -213,7 +218,8 @@ RSpec.describe "Items Index Page" do
 
     describe "an admin visits the items index page" do
       it "can see all enabled items and can click on image to link to item show page" do
-        user = User.create(name: "Nick", role: 3)
+        user = User.create!(name: "Nick", email: "myemail1234@email.com", password: "password", role: 3)
+        address = UserAddress.create!(address: "123 Main St", city: "Denver", state: "CO", zip: "80439", user_id: user.id)
 
         allow_any_instance_of(ApplicationController).to receive(:current_user).and_return(user)
 

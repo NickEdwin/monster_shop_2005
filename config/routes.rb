@@ -44,6 +44,10 @@ Rails.application.routes.draw do
 
   get "/profile", to: "users#show"
   get "/users/edit", to: "users#edit"
+  get "/users/address/:user_address_id/edit", to: "user_addresses#edit"
+  post "/users/address/:user_address_id/edit", to: "user_addresses#edit"
+  get "/users/:id/address/new", to: "user_addresses#new"
+  post "/users/:id/address/create", to: "user_addresses#create"
   get "/profile/orders", to: "user_orders#index"
   patch "/profile", to: "users#update"
 

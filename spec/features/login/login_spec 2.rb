@@ -3,7 +3,8 @@ require "rails_helper"
 RSpec.describe "User login" do
   describe "regular user logs in" do
     it "redirects to profile page and displays flash message" do
-      user = User.create(name: "Tim", address: "123 North st", city: "Denver", state: "Colorado", zip: "80401", email: "1234@gmail.com", password: "password", role: 1)
+      user = User.create!(name: "Tim", email: "myemail@email.com", password: "password", role: 1)
+      address = UserAddress.create!(address: "123 Main St", city: "Denver", state: "CO", zip: "80439", user_id: user.id)
 
       visit "/login"
       fill_in :email, with: "1234@gmail.com"
@@ -18,7 +19,8 @@ RSpec.describe "User login" do
   describe "merchant user logs in" do
     it "redirects to merchant dashboard page and displays flash message" do
       merchant1 = Merchant.create(name: "Meg's Bike Shop", address: '123 Bike Rd.', city: 'Denver', state: 'CO', zip: 80203)
-      user = User.create(name: "Megan", address: "123 North st", city: "Denver", state: "Colorado", zip: "80401", email: "12345@gmail.com", password: "password", role: 2, merchant_id: merchant1.id)
+      user = User.create!(name: "Megan", email: "myemail@email.com", password: "password", role: 2, mercvhant_id: merchant1.id)
+      address = UserAddress.create!(address: "123 Main St", city: "Denver", state: "CO", zip: "80439", user_id: user.id)
 
       visit "/login"
 
@@ -34,7 +36,8 @@ RSpec.describe "User login" do
 
   describe "admin user logs in" do
     it "redirects to admin dashboard page and displays flash message" do
-      user = User.create(name: "Kat", address: "123 North st", city: "Denver", state: "Colorado", zip: "80401", email: "123456@gmail.com", password: "password", role: 3)
+      @user = User.create!(name: "Nick", email: "myemail@email.com", password: "password", role: 3)
+      @address = UserAddress.create!(address: "123 Main St", city: "Denver", state: "CO", zip: "80439", user_id: @user.id)
 
       visit "/login"
 
@@ -51,7 +54,8 @@ RSpec.describe "User login" do
   describe "failed login" do
     describe "established user inputs bad credentials into login form" do
       it "displays a flash message and redirects user to login page" do
-        user = User.create(name: "Megan", address: "123 North st", city: "Denver", state: "Colorado", zip: "80401", email: "12345@gmail.com", password: "password", role: 2)
+        @user = User.create!(name: "Nick", email: "myemail@email.com", password: "password", role: 2)
+        @address = UserAddress.create!(address: "123 Main St", city: "Denver", state: "CO", zip: "80439", user_id: @user.id)
 
         visit "/login"
 
@@ -65,7 +69,8 @@ RSpec.describe "User login" do
       end
 
       it "displays a flash message and redirects user to login page" do
-        user = User.create(name: "Megan", address: "123 North st", city: "Denver", state: "Colorado", zip: "80401", email: "12345@gmail.com", password: "password", role: 2)
+        @user = User.create!(name: "Nick", email: "myemail@email.com", password: "password", role: 2)
+        @address = UserAddress.create!(address: "123 Main St", city: "Denver", state: "CO", zip: "80439", user_id: @user.id)
 
         visit "/login"
 
@@ -96,7 +101,8 @@ RSpec.describe "User login" do
   describe "as an already logged in user" do
     describe "as a regular user" do
       it "is redirected to profile page and displays flash message" do
-        user = User.create(name: "Tim", address: "123 North st", city: "Denver", state: "Colorado", zip: "80401", email: "1234@gmail.com", password: "password", role: 1)
+        user = User.create!(name: "Nick", email: "myemail@email.com", password: "password", role: 1)
+        address = UserAddress.create!(address: "123 Main St", city: "Denver", state: "CO", zip: "80439", user_id: user.id)
         allow_any_instance_of(ApplicationController).to receive(:current_user).and_return(user)
 
         visit "/login"
@@ -109,7 +115,8 @@ RSpec.describe "User login" do
     describe "as a merchant user" do
       it "is redirected to merchant dashboard and displays flash message" do
         merchant1 = Merchant.create(name: "Meg's Bike Shop", address: '123 Bike Rd.', city: 'Denver', state: 'CO', zip: 80203)
-        user = User.create(name: "Megan", address: "123 North st", city: "Denver", state: "Colorado", zip: "80401", email: "12345@gmail.com", password: "password", role: 2, merchant_id: merchant1.id)
+        user = User.create!(name: "Nick", email: "myemail@email.com", password: "password", role: 2, merchant_id: merchant1.id)
+        address = UserAddress.create!(address: "123 Main St", city: "Denver", state: "CO", zip: "80439", user_id: user.id)
 
         allow_any_instance_of(ApplicationController).to receive(:current_user).and_return(user)
 
@@ -122,7 +129,8 @@ RSpec.describe "User login" do
 
     describe "as a admin user" do
       it "is redirected to admin dashboard and displays flash message" do
-        user = User.create(name: "Kat", address: "123 North st", city: "Denver", state: "Colorado", zip: "80401", email: "123456@gmail.com", password: "password", role: 3)
+        user = User.create!(name: "Nick", email: "myemail@email.com", password: "password", role: 3)
+        address = UserAddress.create!(address: "123 Main St", city: "Denver", state: "CO", zip: "80439", user_id: user.id)
         allow_any_instance_of(ApplicationController).to receive(:current_user).and_return(user)
 
         visit "/login"
@@ -135,7 +143,8 @@ RSpec.describe "User login" do
 
   describe "as a registered user" do
     it "visit logout path, get redirected to home page, show logout flash message, and delete items in the shopping cart" do
-      tim = User.create(name: "Tim", address: "123 North st", city: "Denver", state: "Colorado", zip: "80401", email: "myemail@gmail.com", password: "password123", role: 1)
+      user = User.create!(name: "Tim", email: "myemail@email.com", password: "password", role: 1)
+      address = UserAddress.create!(address: "123 Main St", city: "Denver", state: "CO", zip: "80439", user_id: user.id)
       bike_shop = Merchant.create(name: "Meg's Bike Shop", address: '123 Bike Rd.', city: 'Denver', state: 'CO', zip: 80203)
       tire = bike_shop.items.create(name: "Gatorskins", description: "They'll never pop!", price: 100, image: "https://www.rei.com/media/4e1f5b05-27ef-4267-bb9a-14e35935f218?size=784x588", inventory: 12)
 
@@ -176,7 +185,8 @@ RSpec.describe "User login" do
   describe "as a merchant user" do
     it "visit logout path, get redirected to home page, show logout flash message, and delete items in the shopping cart" do
       bike_shop = Merchant.create(name: "Meg's Bike Shop", address: '123 Bike Rd.', city: 'Denver', state: 'CO', zip: 80203)
-      tim = User.create(name: "Tim", address: "123 North st", city: "Denver", state: "Colorado", zip: "80401", email: "myemail@gmail.com", password: "password123", role: 2, merchant_id: bike_shop.id)
+      user = User.create!(name: "Nick", email: "myemail@email.com", password: "password", role: 2, merchant_id: bike_Shop.id)
+      address = UserAddress.create!(address: "123 Main St", city: "Denver", state: "CO", zip: "80439", user_id: user.id)
       tire = bike_shop.items.create(name: "Gatorskins", description: "They'll never pop!", price: 100, image: "https://www.rei.com/media/4e1f5b05-27ef-4267-bb9a-14e35935f218?size=784x588", inventory: 12)
 
       visit "/login"
@@ -215,7 +225,8 @@ RSpec.describe "User login" do
 
   describe "as an admin user" do
     it "visit logout path, get redirected to home page, show logout flash message, and delete items in the shopping cart" do
-      tim = User.create(name: "Tim", address: "123 North st", city: "Denver", state: "Colorado", zip: "80401", email: "myemail@gmail.com", password: "password123", role: 1)
+      user = User.create!(name: "Tim", email: "myemail@email.com", password: "password", role: 1)
+      address = UserAddress.create!(address: "123 Main St", city: "Denver", state: "CO", zip: "80439", user_id: @user.id)
       bike_shop = Merchant.create(name: "Meg's Bike Shop", address: '123 Bike Rd.', city: 'Denver', state: 'CO', zip: 80203)
       tire = bike_shop.items.create(name: "Gatorskins", description: "They'll never pop!", price: 100, image: "https://www.rei.com/media/4e1f5b05-27ef-4267-bb9a-14e35935f218?size=784x588", inventory: 12)
 

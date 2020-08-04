@@ -7,13 +7,20 @@ class UsersController < ApplicationController
 
   def create
     @new_user = User.new(user_params)
-    if @new_user.valid?
-      @new_user.save
+    @new_user.save
+    @address = UserAddress.create({
+      address: params[:address],
+      city: params[:city],
+      state: params[:state],
+      zip: params[:zip],
+      user_id: @new_user.id
+      })
+    if @new_user.valid? && @address.valid?
       flash[:success] = "Hello, #{@new_user.name} You are now registered and logged in"
       session[:user_id] = @new_user.id
       redirect_to "/profile"
     else
-      flash[:error] = @new_user.errors.full_messages.uniq.to_sentence
+      flash[:error] = @new_user.errors.full_messages.uniq.to_sentence + @address.errors.full_messages.uniq.to_sentence
       render :new
     end
   end
@@ -27,11 +34,14 @@ class UsersController < ApplicationController
 
   def update
     current_user.update(user_params)
-    if current_user.save
-      flash[:success] = "Information successfully updated."
-      redirect_to "/profile"
+    require"pry"; binding.pry
+    address = current_user.user_addresses.first
+    address.update(address_params)
+    if current_user.valid? && address.valid?
+        flash[:success] = "Information successfully updated."
+        redirect_to "/profile"
     else
-      flash[:error] = current_user.errors.full_messages.uniq.to_sentence
+      flash[:error] = current_user.errors.full_messages.uniq.to_sentence + address.errors.full_messages.uniq.to_sentence
       redirect_to "/users/edit"
     end
   end
@@ -39,7 +49,11 @@ class UsersController < ApplicationController
   private
 
   def user_params
-    params.permit(:name, :address, :city, :state, :zip, :email, :password)
+    params.permit(:name,:email, :password)
+  end
+
+  def address_params
+    params.permit(:address, :city, :state, :zip, :nickname)
   end
 
   def require_user

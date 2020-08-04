@@ -1,15 +1,18 @@
 <div class="update_user_form">
+  <% require"pry"; binding.pry %>
   <%= form_tag '/profile', method: :patch do %>
     <%= label_tag :name %>
     <%= text_field_tag :name, current_user.name %><br>
     <%= label_tag :address %>
-    <%= text_field_tag :address, current_user.address %><br>
+    <%= text_field_tag :address, current_user.user_addresses.first.address %><br>
     <%= label_tag :city %>
-    <%= text_field_tag :city, current_user.city %><br>
+    <%= text_field_tag :city, current_user.user_addresses.first.city %><br>
     <%= label_tag :state %>
-    <%= text_field_tag :state, current_user.state %><br>
+    <%= text_field_tag :state, current_user.user_addresses.first.state %><br>
     <%= label_tag :zip %>
-    <%= text_field_tag :zip, current_user.zip %><br>
+    <%= text_field_tag :zip, current_user.user_addresses.first.zip %><br>
+    <%= label_tag :address_nickname %>
+    <%= text_field_tag :nickname, current_user.user_addresses.first.nickname %><br>
     <%= label_tag :email %>
     <%= text_field_tag :email, current_user.email%><br>
     <%= hidden_field_tag :password, current_user.password_digest%>

@@ -3,7 +3,8 @@ require 'rails_helper'
 RSpec.describe "as an admin level user" do
   describe "it views any page" do
     it "and sees additonal link to admin dashboard" do
-      user = User.create(name: "Rachel", role: 3)
+      user = User.create!(name: "Nick", email: "12345@gmail.com", password: "password", role: 3)
+      address = UserAddress.create!(address: "123 Main St", city: "Denver", state: "CO", zip: "80439", user_id: user.id)
 
       allow_any_instance_of(ApplicationController).to receive(:current_user).and_return(user)
 
@@ -21,7 +22,8 @@ RSpec.describe "as an admin level user" do
     end
 
     it "a non-admin cannot see admin " do
-      user = User.create(name: "Bob", role: 1)
+      user = User.create!(name: "Nick", email: "123456@gmail.com", password: "password", role: 1)
+      address = UserAddress.create!(address: "123 Main St", city: "Denver", state: "CO", zip: "80439", user_id: user.id)
 
       allow_any_instance_of(ApplicationController).to receive(:current_user).and_return(user)
 
@@ -34,7 +36,8 @@ RSpec.describe "as an admin level user" do
 
   describe "I try to view pages starting with /merchant or /cart" do
     it "it displays a 404 error" do
-      admin = User.create(name: "Rachel", role: 3)
+      admin = User.create!(name: "Nick", email: "1234567@gmail.com", password: "password", role: 3)
+      address = UserAddress.create!(address: "123 Main St", city: "Denver", state: "CO", zip: "80439", user_id: admin.id)
 
       allow_any_instance_of(ApplicationController).to receive(:current_user).and_return(admin)
 
@@ -49,7 +52,8 @@ RSpec.describe "as an admin level user" do
 
   describe "visit the admin dashboard" do
     before :each do
-      @user_1 = User.create!(name: "Nick", address: "123 Main St", city: "Denver", state: "CO", zip: "80439", email: "myemail@email.com", password: "password", role: 1)
+      @user_1 = User.create!(name: "Nick", email: "12345@gmail.com", password: "password", role: 1)
+      @address = UserAddress.create!(address: "123 Main St", city: "Denver", state: "CO", zip: "80439", user_id: @user_1.id)
 
       mike = Merchant.create(name: "Mike's Print Shop", address: '123 Paper Rd.', city: 'Denver', state: 'CO', zip: 80203)
       meg = Merchant.create(name: "Meg's Bike Shop", address: '123 Bike Rd.', city: 'Denver', state: 'CO', zip: 80203)
@@ -62,26 +66,30 @@ RSpec.describe "as an admin level user" do
       @order_1.item_orders.create!(item: tire, price: tire.price, quantity: 2)
       @order_1.item_orders.create!(item: paper, price: paper.price, quantity: 3)
 
-      @user_2 = User.create(name: "Tim", address: "123 North st", city: "Denver", state: "Colorado", zip: "80401", email: "1234@gmail.com", password: "password", role: 1)
+      @user_2 = User.create!(name: "Tim", email: "123456@gmail.com", password: "password", role: 1)
+      @address = UserAddress.create!(address: "123 Main St", city: "Denver", state: "CO", zip: "80439", user_id: @user_2.id)
 
       @order_2 = Order.create!(name: 'Meg', address: '123 Stang Ave', city: 'Hershey', state: 'CO', zip: 17033, status: "shipped", user_id: @user_2.id)
 
       @order_2.item_orders.create!(item: tire, price: tire.price, quantity: 1)
       @order_2.item_orders.create!(item: pencil, price: pencil.price, quantity: 10)
 
-      @user_3 = User.create!(name: "Chloe", address: "123 Main St", city: "Denver", state: "CO", zip: "80439", email: "myemailyay@email.com", password: "password", role: 1)
+      @user_3 = User.create!(name: "Chloe", email: "email@gmail.com", password: "password", role: 1)
+      @address = UserAddress.create!(address: "123 Main St", city: "Denver", state: "CO", zip: "80439", user_id: @user_3.id)
 
       @order_3 = Order.create!(name: 'Meg', address: '123 Stang Ave', city: 'Hershey', state: 'UT', zip: 17033, status: "pending", user_id: @user_3.id)
 
       @order_3.item_orders.create!(item: tire, price: tire.price, quantity: 6)
 
-      @user_4 = User.create!(name: "Kat", address: "123 Main St", city: "Denver", state: "CO", zip: "80439", email: "myotheremail@email.com", password: "password", role: 1)
+      @user_4 = User.create!(name: "Kat", email: "what@gmail.com", password: "password", role: 1)
+      @address = UserAddress.create!(address: "123 Main St", city: "Denver", state: "CO", zip: "80439", user_id: @user_4.id)
 
       @order_4 = Order.create!(name: 'Meg', address: '123 Stang Ave', city: 'Hershey', state: 'NC', zip: 17033, status: "cancelled", user_id: @user_4.id)
 
       @order_4.item_orders.create!(item: paper, price: paper.price, quantity: 9)
 
-      @user = User.create!(name: "Megan", address: "123 North st", city: "Denver", state: "Colorado", zip: "80401", email: "12345@gmail.com", password: "password", role: 3)
+      @user = User.create!(name: "Nick", email: "12311145@gmail.com", password: "password", role: 3)
+      @address = UserAddress.create!(address: "123 Main St", city: "Denver", state: "CO", zip: "80439", user_id: @user.id)
       allow_any_instance_of(ApplicationController).to receive(:current_user).and_return(@user)
     end
 
@@ -175,7 +183,8 @@ RSpec.describe "as an admin level user" do
       @paper = @mike.items.create(name: "Lined Paper", description: "Great for writing on!", price: 20, image: "https://cdn.vertex42.com/WordTemplates/images/printable-lined-paper-wide-ruled.png", inventory: 35)
       @pencil = @mike.items.create(name: "Yellow Pencil", description: "You can write on paper with it!", price: 2, image: "https://images-na.ssl-images-amazon.com/images/I/31BlVr01izL._SX425_.jpg", inventory: 100)
 
-      @user = User.create!(name: "Nick", address: "123 Main St", city: "Denver", state: "CO", zip: "80439", email: "myemail@email.com", password: "password", role: 3)
+      @user = User.create!(name: "Nick", email: "12345@gmail.com", password: "password", role: 3)
+      @address = UserAddress.create!(address: "123 Main St", city: "Denver", state: "CO", zip: "80439", user_id: @user.id)
       allow_any_instance_of(ApplicationController).to receive(:current_user).and_return(@user)
     end
 
@@ -204,9 +213,14 @@ RSpec.describe "as an admin level user" do
       @paper = @mike.items.create(name: "Lined Paper", description: "Great for writing on!", price: 20, image: "https://cdn.vertex42.com/WordTemplates/images/printable-lined-paper-wide-ruled.png", inventory: 35, active?: true)
       @pencil = @mike.items.create(name: "Yellow Pencil", description: "You can write on paper with it!", price: 2, image: "https://images-na.ssl-images-amazon.com/images/I/31BlVr01izL._SX425_.jpg", inventory: 100, active?: true)
 
-      @user = User.create!(name: "Nick", address: "123 Main St", city: "Denver", state: "CO", zip: "80439", email: "myemail@email.com", password: "password", role: 3)
-      @user1 = User.create!(name: "Rick", address: "1234 Main St", city: "New York", state: "NY", zip: "80439", email: "myemail1@email.com", password: "password", role: 1)
-      @user2 = User.create!(name: "Mick", address: "12345 Main St", city: "Trenton", state: "NJ", zip: "80439", email: "myemail2@email.com", password: "password", role: 2)
+      @user = User.create!(name: "Nick", email: "myemail@email.com", password: "password", role: 3)
+      @address = UserAddress.create!(address: "123 Main St", city: "Denver", state: "CO", zip: "80439", user_id: @user.id)
+
+      @user1 = User.create!(name: "Rick", email: "myemail1@email.com", password: "password", role: 1)
+      @address = UserAddress.create!(address: "123 Main St", city: "Denver", state: "CO", zip: "80439", user_id: @user1.id)
+
+      @user2 = User.create!(name: "Mick", email: "myemail2@email.com", password: "password", role: 2)
+      @address = UserAddress.create!(address: "123 Main St", city: "Denver", state: "CO", zip: "80439", user_id: @user2.id)
 
       @order_1 = Order.create!(name: 'Meg', address: '123 Stang Ave', city: 'Hershey', state: 'PA', zip: 17033, status: "pending", user_id: @user1.id)
       @order_1.item_orders.create!(item: @tire, price: @tire.price, quantity: 2)
@@ -298,11 +312,11 @@ RSpec.describe "as an admin level user" do
       visit("/admin/users/#{@user2.id}")
 
       expect(page).to have_content(@user2.name)
-      expect(page).to have_content(@user2.address)
-      expect(page).to have_content(@user2.city)
-      expect(page).to have_content(@user2.state)
-      expect(page).to have_content(@user2.zip)
       expect(page).to have_content(@user2.email)
+      expect(page).to have_content(@user2.user_addresses.first.address)
+      expect(page).to have_content(@user2.user_addresses.first.city)
+      expect(page).to have_content(@user2.user_addresses.first.state)
+      expect(page).to have_content(@user2.user_addresses.first.zip)
 
       expect(page).to_not have_link("Edit Profile")
     end
