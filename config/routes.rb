@@ -1,57 +1,78 @@
 Rails.application.routes.draw do
   # For details on the DSL available within this file, see http://guides.rubyonrails.org/routing.html
   root to: "items#index"
-  get "/merchants", to: "merchants#index"
-  get "/merchants/new", to: "merchants#new"
-  get "/merchants/:id", to: "merchants#show"
-  post "/merchants", to: "merchants#create"
-  get "/merchants/:id/edit", to: "merchants#edit"
-  patch "/merchants/:id", to: "merchants#update"
-  delete "/merchants/:id", to: "merchants#destroy"
 
-  get "/items", to: "items#index"
-  get "/items/:id", to: "items#show"
-  get "/items/:id/edit", to: "items#edit"
-  patch "/items/:id", to: "items#update"
-  get "/merchants/:merchant_id/items", to: "items#index"
-  get "/merchants/:merchant_id/items/new", to: "items#new"
-  post "/merchants/:merchant_id/items", to: "items#create"
-  delete "/items/:id", to: "items#destroy"
+  resources :merchants do
+    resources :items
+  end
 
-  get "/items/:item_id/reviews/new", to: "reviews#new"
-  post "/items/:item_id/reviews", to: "reviews#create"
+  # get "/merchants", to: "merchants#index"
+  # get "/merchants/new", to: "merchants#new"
+  # get "/merchants/:id", to: "merchants#show"
+  # post "/merchants", to: "merchants#create"
+  # get "/merchants/:id/edit", to: "merchants#edit"
+  # patch "/merchants/:id", to: "merchants#update"
+  # delete "/merchants/:id", to: "merchants#destroy"
 
-  get "/reviews/:id/edit", to: "reviews#edit"
-  patch "/reviews/:id", to: "reviews#update"
-  delete "/reviews/:id", to: "reviews#destroy"
+  resources :items do
+    resources :reviews
+  end
 
-  post "/cart/:item_id", to: "cart#add_item"
-  get "/cart", to: "cart#show"
-  delete "/cart", to: "cart#empty"
-  delete "/cart/:item_id", to: "cart#remove_item"
+  # get "/items", to: "items#index"
+  # get "/items/:id", to: "items#show"
+  # get "/items/:id/edit", to: "items#edit"
+  # patch "/items/:id", to: "items#update"
+  # get "/merchants/:merchant_id/items", to: "items#index"
+  # get "/merchants/:merchant_id/items/new", to: "items#new"
+  # post "/merchants/:merchant_id/items", to: "items#create"
+  # delete "/items/:id", to: "items#destroy"
+  # get "/items/:item_id/reviews/new", to: "reviews#new"
+  # post "/items/:item_id/reviews", to: "reviews#create"
 
-  get "/orders/new", to: "orders#new"
-  post "/orders", to: "orders#create"
-  get "/orders/:id", to: "orders#show"
-  get "/orders/:id/update", to: "orders#update"
+  resources :reviews, only: [:edit, :update, :destroy]
 
-  get "/register/new", to: "users#new"
-  post "/register", to: "users#create"
+  # get "/reviews/:id/edit", to: "reviews#edit"
+  # patch "/reviews/:id", to: "reviews#update"
+  # delete "/reviews/:id", to: "reviews#destroy"
 
-  get "/login", to: "sessions#new"
-  post "/login", to: "sessions#create"
-  get "/logout", to: "sessions#destroy"
 
-  get "/profile", to: "users#show"
-  get "/users/edit", to: "users#edit"
-  get "/profile/orders", to: "user_orders#index"
-  patch "/profile", to: "users#update"
+  # non-restful needs its own space
+  get "/cart" => "cart#show"
+  post "/cart/:item_id" => "cart#add_item"
+  delete "/cart" => "cart#empty"
+  delete "/cart/:item_id" => "cart#remove_item"
 
-  get "/users/password/edit", to: "passwords#edit"
-  patch "/profile/password", to: "passwords#update"
+  resources :orders, only: [:new, :create, :show]
 
-  put "/cart/:item_id/increase", to: "cart#increase"
-  put "/cart/:item_id/decrease", to: "cart#decrease"
+  # get "/orders/new", to: "orders#new"
+  # post "/orders", to: "orders#create"
+  # get "/orders/:id", to: "orders#show"
+
+  # non-restful needs its own space
+  get "/orders/:id/update" => "orders#update"
+
+  # named route, 'register' uses 'users' controller
+  # get "/register/new", to: "users#new"
+  get '/register/new' => 'users#new', as: 'new'
+  # post "/register", to: "users#create"
+  post '/register' => 'users#create', as: 'create'
+
+
+  get "/login" => "sessions#new"
+  post "/login" => "sessions#create"
+  get "/logout" => "sessions#destroy"
+
+
+  get "/profile" => "users#show"
+  get "/users/edit" => "users#edit"
+  get "/profile/orders" => "user_orders#index"
+  patch "/profile" => "users#update"
+
+  get "/users/password/edit" => "passwords#edit"
+  patch "/profile/password" => "passwords#update"
+
+  put "/cart/:item_id/increase" => "cart#increase"
+  put "/cart/:item_id/decrease" => "cart#decrease"
 
   namespace :merchant do
     get "/", to: "dashboard#index"
