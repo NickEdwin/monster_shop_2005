@@ -1,7 +1,7 @@
 <center>
   <h3>Edit <%= @coupon.name %> </h3>
 
-  <%= form_tag "/merchant/coupons/#{@coupon.id}/update" do %>
+  <%= form_tag "/merchant/coupons/#{@coupon.id}", method: :patch do %>
     <%= label_tag :coupon_name %>
     <%= text_field_tag :name%>
 

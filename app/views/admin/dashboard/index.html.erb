@@ -10,7 +10,7 @@
           <p>Date Created: <%= order.created_at %></p>
           <p>Order Status: <%= order.status %> </p>
           <% if order.status == "packaged" %>
-            <%= button_to "Ship", "/admin/orders/#{order.id}/update", method: :patch %>
+            <%= button_to "Ship", "/admin/orders/#{order.id}", method: :patch %>
           <% end %>
           </li>
       </ul>

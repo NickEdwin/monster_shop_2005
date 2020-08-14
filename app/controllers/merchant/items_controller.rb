@@ -18,7 +18,7 @@ class Merchant::ItemsController < Merchant::BaseController
     end
   end
 
-  def delete
+  def destroy
     item = Item.find(params[:id])
     item.delete
     flash[:sucess] = "#{item.name} was successfully deleted"

@@ -15,14 +15,14 @@
         <p>Inventory: <%= item.inventory %> </p>
         <% if item.active? %>
           <p>Active</p>
-          <%= button_to "Deactivate", "/merchant/items/#{item.id}/update", method: :patch %>
+          <%= button_to "Deactivate", "/merchant/items/#{item.id}", method: :patch %>
         <% else %>
           <p>Inactive</p>
-          <%= button_to "Activate", "/merchant/items/#{item.id}/update", method: :patch %>
+          <%= button_to "Activate", "/merchant/items/#{item.id}", method: :patch %>
         <% end %>
         <section class="delete-item-<%= item.id %>">
         <% if item.orders.empty? %>
-          <%= button_to "delete", "/merchant/items/#{item.id}/delete", method: :delete %>
+          <%= button_to "delete", "/merchant/items/#{item.id}", method: :delete %>
         <% end %>
         <%= link_to "Create a coupon for this item", "/merchant/items/#{item.id}/coupons/new" %>
         </section>
@@ -49,7 +49,7 @@
           <th><%= coupon.min_items %></th>
           <th><%= coupon.discount %>%</th>
           <th><%= Item.find(coupon.item_id).name %></th>
-          <th><%=link_to "Delete", "/merchant/coupons/#{coupon.id}/delete", method: :delete%> | <%=link_to "Edit", "/merchant/coupons/#{coupon.id}/edit"%></th>
+          <th><%=link_to "Delete", "/merchant/coupons/#{coupon.id}", method: :delete%> | <%=link_to "Edit", "/merchant/coupons/#{coupon.id}/edit"%></th>
         </tr>
       </section>
       <% end %>

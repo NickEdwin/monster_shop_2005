@@ -1,7 +1,7 @@
 <center>
   <h3>Create a new coupon for <%= @item.name %> </h3>
 
-  <%= form_tag "/merchant/items/#{@item.id}/coupons/new" do %>
+  <%= form_tag "/merchant/items/#{@item.id}/coupons", method: :post do %>
     <%= label_tag :coupon_name %>
     <%= text_field_tag :name%>
 
