@@ -12,9 +12,9 @@
       <% end %>
       <h3>Is enabled? <br><%= merchant.enabled? %></h3>
       <% if merchant.enabled? %>
-        <%= button_to "disable", "/admin/merchants/#{merchant.id}/update", method: :patch %>
+        <%= button_to "disable", "/admin/merchants/#{merchant.id}", method: :patch %>
       <% else %>
-        <%= button_to "enable", "/admin/merchants/#{merchant.id}/update", method: :patch %>
+        <%= button_to "enable", "/admin/merchants/#{merchant.id}", method: :patch %>
       <% end %>
     </section>
   <% end %>

@@ -57,7 +57,7 @@ Rails.application.routes.draw do
   # post "/register", to: "users#create"
   post '/register' => 'users#create', as: 'create'
 
-
+  ## NOT RESTUL! AHHHHHHH
   get "/login" => "sessions#new"
   post "/login" => "sessions#create"
   get "/logout" => "sessions#destroy"
@@ -75,29 +75,59 @@ Rails.application.routes.draw do
   put "/cart/:item_id/decrease" => "cart#decrease"
 
   namespace :merchant do
+    resources :items, except: [:edit, :show] do
+      resources :coupons, only: [:create, :new]
+    end
+
+    resources :orders, only: [:show]
+
+    resources :coupons, only: [:edit, :update, :destroy]
+
+    #non-RESTFUL
     get "/", to: "dashboard#index"
-    get "/orders/:order_id", to: "orders#show"
-    get "/items", to: "items#index"
-    patch "/items/:id/update", to: "items#update"
-    delete "/items/:id/delete", to: "items#delete"
-    get "/items/new", to: "items#new"
-    post "/items", to: "items#create"
+
+    # get "/orders/:order_id", to: "orders#show"
+    # get "/items", to: "items#index"
+    # patch "/items/:id/update", to: "items#update"
+    # delete "/items/:id/delete", to: "items#delete"
+    # get "/items/new", to: "items#new"
+    # post "/items", to: "items#create"
+
+    #non-RESTFUL
     patch "/orders/:order_id/items/:item_id/update", to: "order_items#update"
-    get "/items/:item_id/coupons/new", to: "coupons#new"
-    post "/items/:item_id/coupons/new", to: "coupons#create"
-    delete "/coupons/:coupon_id/delete", to: "coupons#destroy"
-    get "/coupons/:coupon_id/edit", to: "coupons#edit"
-    post "/coupons/:coupon_id/update", to: "coupons#update"
+
+    # get "/items/:item_id/coupons/new", to: "coupons#new"
+    # post "/items/:item_id/coupons/new", to: "coupons#create"
+    # delete "/coupons/:coupon_id/delete", to: "coupons#destroy"
+    # get "/coupons/:coupon_id/edit", to: "coupons#edit"
+    # post "/coupons/:coupon_id/update", to: "coupons#update"
+
   end
 
   namespace :admin do
+    ## non-re... you know what you did...
     get "/", to: "dashboard#index"
-    get "/users", to: "users#index"
-    get "/users/:user_id", to: "users#show"
-    patch "/orders/:order_id/update", to: "orders#update"
-    get "/merchants", to: "merchants#index"
-    get "/merchants/:id", to: "merchants#show"
-    patch "/merchants/:id/update", to: "merchants#update"
-    get "/users/:user_id/orders/:order_id", to: "orders#show"
+
+    resources :users, only: [:index, :show] do
+      resources :orders, only: [:show]
+    end
+    # get "/users", to: "users#index"
+    # get "/users/:user_id", to: "users#show"
+    # get "/users/:user_id/orders/:order_id", to: "orders#show"
+
+    resources :orders, only: [:update]
+    # patch "/orders/:order_id/update", to: "orders#update"
+
+    resources :merchants, only: [:index, :show, :update]
+    # get "/merchants", to: "merchants#index"
+    # get "/merchants/:id", to: "merchants#show"
+    # patch "/merchants/:id/update", to: "merchants#update"
+
   end
 end
+
+### LESSONS LEARNED!
+### LEAVE /UPDATE OFF ROUTES!
+### LEAVE /DESTROY OFF ROUTES!
+### USE MORE RESTFUL ROUTES
+### IT'S 'DESTROY' NOT 'DELETE'!

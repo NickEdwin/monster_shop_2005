@@ -15,11 +15,11 @@ class Merchant::CouponsController < Merchant::BaseController
   end
 
   def edit
-    @coupon = Coupon.find(params[:coupon_id])
+    @coupon = Coupon.find(params[:id])
   end
 
   def update
-    coupon = Coupon.find(params[:coupon_id])
+    coupon = Coupon.find(params[:id])
     coupon.update(coupon_params)
     if coupon.save
       redirect_to "/merchant/items"
@@ -31,7 +31,7 @@ class Merchant::CouponsController < Merchant::BaseController
   end
 
   def destroy
-    coupon = Coupon.find(params[:coupon_id])
+    coupon = Coupon.find(params[:id])
     coupon.delete
     flash[:success] = "#{coupon.name} was sucessfully deleted"
     redirect_to "/merchant/items"
